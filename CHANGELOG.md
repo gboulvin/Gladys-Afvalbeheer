@@ -10,6 +10,8 @@ the notes of the version's GitHub Release.
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-10-15
+
 ### Added
 
 - First release: waste collection schedules in Belgium and the Netherlands.
@@ -30,3 +32,6 @@ the notes of the version's GitHub Release.
 - Dashboard widgets "Next waste collection" and "Upcoming waste collections".
 - English, French, German and Spanish everywhere (configuration, scenes,
   widgets, documentation); device names and scene texts also in Dutch.
+
+[Unreleased]: https://github.com/gboulvin/Gladys-Afvalbeheer/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/gboulvin/Gladys-Afvalbeheer/releases/tag/v1.0.0
