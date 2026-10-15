@@ -1,0 +1,1519 @@
+{
+  "manifest_version": 1,
+  "type": "device",
+  "name": "Afvalbeheer - Collecte déchets",
+  "description": {
+    "en": "Waste collection days in the Netherlands and Belgium (Recycle!, Tibi, Ipalle, Ximmio, HVC...)",
+    "fr": "Jours de collecte des déchets aux Pays-Bas et en Belgique (Recycle!, Tibi, Ipalle, HVC...)",
+    "de": "Müllabfuhrtermine in den Niederlanden und Belgien (Recycle!, Tibi, Ipalle, HVC...)",
+    "es": "Días de recogida de residuos en Países Bajos y Bélgica (Recycle!, Tibi, Ipalle, HVC...)"
+  },
+  "version": "0.0.0",
+  "docker_image": "ghcr.io/gboulvin/gladys-afvalbeheer:0.0.0",
+  "gladys_version": ">=5.1.0",
+  "cover_image": "https://raw.githubusercontent.com/gboulvin/Gladys-Afvalbeheer/main/cover.png",
+  "categories": ["services", "environment"],
+  "transports": ["cloud"],
+  "config_schema": [
+    {
+      "key": "intro",
+      "type": "section",
+      "label": {
+        "en": "Where does it work?",
+        "fr": "Où fonctionne-t-elle ?",
+        "de": "Wo funktioniert es?",
+        "es": "¿Dónde funciona?"
+      },
+      "description": {
+        "en": "Belgium: every municipality covered by the Recycle! app (Wallonia — Tibi, Ipalle, Intradel, BEP, Hygea, inBW, IDELUX, ICDI —, Flanders and Brussels), plus Limburg.net. Netherlands: about 60 waste companies and municipalities (Mijn Afvalwijzer, Ximmio, Burgerportaal, Opzet, HVC, ROVA, RD4, Circulus...). Pick your collector, then enter your address: the schedule is fetched from the collector's public API. No account needed.",
+        "fr": "Belgique : toutes les communes couvertes par l'application Recycle! (Wallonie — Tibi, Ipalle, Intradel, BEP, Hygea, inBW, IDELUX, ICDI —, Flandre et Bruxelles), plus Limburg.net. Pays-Bas : une soixantaine de collecteurs et communes (Mijn Afvalwijzer, Ximmio, Burgerportaal, Opzet, HVC, ROVA, RD4, Circulus...). Choisissez votre collecteur puis saisissez votre adresse : le calendrier est lu sur l'API publique du collecteur. Aucun compte nécessaire.",
+        "de": "Belgien: alle Gemeinden der Recycle!-App (Wallonien — Tibi, Ipalle, Intradel, BEP, Hygea, inBW, IDELUX, ICDI —, Flandern und Brüssel) sowie Limburg.net. Niederlande: rund 60 Entsorger und Gemeinden (Mijn Afvalwijzer, Ximmio, Burgerportaal, Opzet, HVC, ROVA, RD4, Circulus...). Wählen Sie Ihren Entsorger und geben Sie Ihre Adresse ein: Der Kalender wird über die öffentliche API des Entsorgers gelesen. Kein Konto nötig.",
+        "es": "Bélgica: todos los municipios de la aplicación Recycle! (Valonia — Tibi, Ipalle, Intradel, BEP, Hygea, inBW, IDELUX, ICDI —, Flandes y Bruselas), más Limburg.net. Países Bajos: unas 60 empresas y municipios (Mijn Afvalwijzer, Ximmio, Burgerportaal, Opzet, HVC, ROVA, RD4, Circulus...). Elija su recolector e introduzca su dirección: el calendario se lee en la API pública del recolector. No se necesita cuenta."
+      },
+      "links": [
+        {
+          "url": "https://www.recycleapp.be",
+          "label": {
+            "en": "Recycle! (Belgium)",
+            "fr": "Recycle! (Belgique)",
+            "de": "Recycle! (Belgien)",
+            "es": "Recycle! (Bélgica)"
+          }
+        },
+        {
+          "url": "https://www.mijnafvalwijzer.nl",
+          "label": {
+            "en": "Mijn Afvalwijzer (Netherlands)",
+            "fr": "Mijn Afvalwijzer (Pays-Bas)",
+            "de": "Mijn Afvalwijzer (Niederlande)",
+            "es": "Mijn Afvalwijzer (Países Bajos)"
+          }
+        }
+      ]
+    },
+    {
+      "key": "collector",
+      "type": "select",
+      "label": {
+        "en": "Waste collector",
+        "fr": "Collecteur de déchets",
+        "de": "Entsorger",
+        "es": "Recolector de residuos"
+      },
+      "description": {
+        "en": "In Belgium, pick Recycle! (or Limburg.net in the province of Limburg).",
+        "fr": "En Belgique, choisissez Recycle! (ou Limburg.net dans la province de Limbourg).",
+        "de": "In Belgien wählen Sie Recycle! (oder Limburg.net in der Provinz Limburg).",
+        "es": "En Bélgica, elija Recycle! (o Limburg.net en la provincia de Limburgo)."
+      },
+      "required": true,
+      "default": "recycleapp",
+      "options": [
+        {
+          "value": "recycleapp",
+          "label": {
+            "en": "🇧🇪 Recycle! (Fost Plus) — Belgique / België",
+            "fr": "🇧🇪 Recycle! (Fost Plus) — Belgique / België",
+            "de": "🇧🇪 Recycle! (Fost Plus) — Belgique / België",
+            "es": "🇧🇪 Recycle! (Fost Plus) — Belgique / België"
+          }
+        },
+        {
+          "value": "limburg.net",
+          "label": {
+            "en": "🇧🇪 Limburg.net",
+            "fr": "🇧🇪 Limburg.net",
+            "de": "🇧🇪 Limburg.net",
+            "es": "🇧🇪 Limburg.net"
+          }
+        },
+        {
+          "value": "mijnafvalwijzer",
+          "label": {
+            "en": "🇳🇱 Mijn Afvalwijzer",
+            "fr": "🇳🇱 Mijn Afvalwijzer",
+            "de": "🇳🇱 Mijn Afvalwijzer",
+            "es": "🇳🇱 Mijn Afvalwijzer"
+          }
+        },
+        {
+          "value": "acv",
+          "label": {
+            "en": "🇳🇱 ACV",
+            "fr": "🇳🇱 ACV",
+            "de": "🇳🇱 ACV",
+            "es": "🇳🇱 ACV"
+          }
+        },
+        {
+          "value": "almere",
+          "label": {
+            "en": "🇳🇱 Almere",
+            "fr": "🇳🇱 Almere",
+            "de": "🇳🇱 Almere",
+            "es": "🇳🇱 Almere"
+          }
+        },
+        {
+          "value": "areareiniging",
+          "label": {
+            "en": "🇳🇱 Area Reiniging",
+            "fr": "🇳🇱 Area Reiniging",
+            "de": "🇳🇱 Area Reiniging",
+            "es": "🇳🇱 Area Reiniging"
+          }
+        },
+        {
+          "value": "avalex",
+          "label": {
+            "en": "🇳🇱 Avalex",
+            "fr": "🇳🇱 Avalex",
+            "de": "🇳🇱 Avalex",
+            "es": "🇳🇱 Avalex"
+          }
+        },
+        {
+          "value": "avri",
+          "label": {
+            "en": "🇳🇱 Avri",
+            "fr": "🇳🇱 Avri",
+            "de": "🇳🇱 Avri",
+            "es": "🇳🇱 Avri"
+          }
+        },
+        {
+          "value": "blink",
+          "label": {
+            "en": "🇳🇱 Blink",
+            "fr": "🇳🇱 Blink",
+            "de": "🇳🇱 Blink",
+            "es": "🇳🇱 Blink"
+          }
+        },
+        {
+          "value": "hellendoorn",
+          "label": {
+            "en": "🇳🇱 Hellendoorn",
+            "fr": "🇳🇱 Hellendoorn",
+            "de": "🇳🇱 Hellendoorn",
+            "es": "🇳🇱 Hellendoorn"
+          }
+        },
+        {
+          "value": "meerlanden",
+          "label": {
+            "en": "🇳🇱 Meerlanden",
+            "fr": "🇳🇱 Meerlanden",
+            "de": "🇳🇱 Meerlanden",
+            "es": "🇳🇱 Meerlanden"
+          }
+        },
+        {
+          "value": "oostzaan",
+          "label": {
+            "en": "🇳🇱 Oostzaan",
+            "fr": "🇳🇱 Oostzaan",
+            "de": "🇳🇱 Oostzaan",
+            "es": "🇳🇱 Oostzaan"
+          }
+        },
+        {
+          "value": "rad",
+          "label": {
+            "en": "🇳🇱 RAD Hoeksche Waard",
+            "fr": "🇳🇱 RAD Hoeksche Waard",
+            "de": "🇳🇱 RAD Hoeksche Waard",
+            "es": "🇳🇱 RAD Hoeksche Waard"
+          }
+        },
+        {
+          "value": "twentemilieu",
+          "label": {
+            "en": "🇳🇱 Twente Milieu",
+            "fr": "🇳🇱 Twente Milieu",
+            "de": "🇳🇱 Twente Milieu",
+            "es": "🇳🇱 Twente Milieu"
+          }
+        },
+        {
+          "value": "venlo",
+          "label": {
+            "en": "🇳🇱 Venlo",
+            "fr": "🇳🇱 Venlo",
+            "de": "🇳🇱 Venlo",
+            "es": "🇳🇱 Venlo"
+          }
+        },
+        {
+          "value": "waardlanden",
+          "label": {
+            "en": "🇳🇱 Waardlanden",
+            "fr": "🇳🇱 Waardlanden",
+            "de": "🇳🇱 Waardlanden",
+            "es": "🇳🇱 Waardlanden"
+          }
+        },
+        {
+          "value": "westland",
+          "label": {
+            "en": "🇳🇱 Westland",
+            "fr": "🇳🇱 Westland",
+            "de": "🇳🇱 Westland",
+            "es": "🇳🇱 Westland"
+          }
+        },
+        {
+          "value": "woerden",
+          "label": {
+            "en": "🇳🇱 Woerden",
+            "fr": "🇳🇱 Woerden",
+            "de": "🇳🇱 Woerden",
+            "es": "🇳🇱 Woerden"
+          }
+        },
+        {
+          "value": "assen",
+          "label": {
+            "en": "🇳🇱 Assen",
+            "fr": "🇳🇱 Assen",
+            "de": "🇳🇱 Assen",
+            "es": "🇳🇱 Assen"
+          }
+        },
+        {
+          "value": "bar",
+          "label": {
+            "en": "🇳🇱 BAR-Afvalbeheer",
+            "fr": "🇳🇱 BAR-Afvalbeheer",
+            "de": "🇳🇱 BAR-Afvalbeheer",
+            "es": "🇳🇱 BAR-Afvalbeheer"
+          }
+        },
+        {
+          "value": "breda",
+          "label": {
+            "en": "🇳🇱 Breda",
+            "fr": "🇳🇱 Breda",
+            "de": "🇳🇱 Breda",
+            "es": "🇳🇱 Breda"
+          }
+        },
+        {
+          "value": "groningen",
+          "label": {
+            "en": "🇳🇱 Groningen",
+            "fr": "🇳🇱 Groningen",
+            "de": "🇳🇱 Groningen",
+            "es": "🇳🇱 Groningen"
+          }
+        },
+        {
+          "value": "nijkerk",
+          "label": {
+            "en": "🇳🇱 Nijkerk",
+            "fr": "🇳🇱 Nijkerk",
+            "de": "🇳🇱 Nijkerk",
+            "es": "🇳🇱 Nijkerk"
+          }
+        },
+        {
+          "value": "rmn",
+          "label": {
+            "en": "🇳🇱 RMN (Midden-Nederland)",
+            "fr": "🇳🇱 RMN (Midden-Nederland)",
+            "de": "🇳🇱 RMN (Midden-Nederland)",
+            "es": "🇳🇱 RMN (Midden-Nederland)"
+          }
+        },
+        {
+          "value": "tilburg",
+          "label": {
+            "en": "🇳🇱 Tilburg",
+            "fr": "🇳🇱 Tilburg",
+            "de": "🇳🇱 Tilburg",
+            "es": "🇳🇱 Tilburg"
+          }
+        },
+        {
+          "value": "afval3xbeter",
+          "label": {
+            "en": "🇳🇱 Afval3xBeter",
+            "fr": "🇳🇱 Afval3xBeter",
+            "de": "🇳🇱 Afval3xBeter",
+            "es": "🇳🇱 Afval3xBeter"
+          }
+        },
+        {
+          "value": "afvalstoffendienstkalender",
+          "label": {
+            "en": "🇳🇱 Afvalstoffendienst",
+            "fr": "🇳🇱 Afvalstoffendienst",
+            "de": "🇳🇱 Afvalstoffendienst",
+            "es": "🇳🇱 Afvalstoffendienst"
+          }
+        },
+        {
+          "value": "alphenaandenrijn",
+          "label": {
+            "en": "🇳🇱 Alphen aan den Rijn",
+            "fr": "🇳🇱 Alphen aan den Rijn",
+            "de": "🇳🇱 Alphen aan den Rijn",
+            "es": "🇳🇱 Alphen aan den Rijn"
+          }
+        },
+        {
+          "value": "berkelland",
+          "label": {
+            "en": "🇳🇱 Berkelland",
+            "fr": "🇳🇱 Berkelland",
+            "de": "🇳🇱 Berkelland",
+            "es": "🇳🇱 Berkelland"
+          }
+        },
+        {
+          "value": "cranendonck",
+          "label": {
+            "en": "🇳🇱 Cranendonck",
+            "fr": "🇳🇱 Cranendonck",
+            "de": "🇳🇱 Cranendonck",
+            "es": "🇳🇱 Cranendonck"
+          }
+        },
+        {
+          "value": "cyclus",
+          "label": {
+            "en": "🇳🇱 Cyclus",
+            "fr": "🇳🇱 Cyclus",
+            "de": "🇳🇱 Cyclus",
+            "es": "🇳🇱 Cyclus"
+          }
+        },
+        {
+          "value": "dar",
+          "label": {
+            "en": "🇳🇱 Dar",
+            "fr": "🇳🇱 Dar",
+            "de": "🇳🇱 Dar",
+            "es": "🇳🇱 Dar"
+          }
+        },
+        {
+          "value": "defryskemarren",
+          "label": {
+            "en": "🇳🇱 De Fryske Marren",
+            "fr": "🇳🇱 De Fryske Marren",
+            "de": "🇳🇱 De Fryske Marren",
+            "es": "🇳🇱 De Fryske Marren"
+          }
+        },
+        {
+          "value": "denhaag",
+          "label": {
+            "en": "🇳🇱 Den Haag",
+            "fr": "🇳🇱 Den Haag",
+            "de": "🇳🇱 Den Haag",
+            "es": "🇳🇱 Den Haag"
+          }
+        },
+        {
+          "value": "gad",
+          "label": {
+            "en": "🇳🇱 GAD",
+            "fr": "🇳🇱 GAD",
+            "de": "🇳🇱 GAD",
+            "es": "🇳🇱 GAD"
+          }
+        },
+        {
+          "value": "hvc",
+          "label": {
+            "en": "🇳🇱 HVC",
+            "fr": "🇳🇱 HVC",
+            "de": "🇳🇱 HVC",
+            "es": "🇳🇱 HVC"
+          }
+        },
+        {
+          "value": "lingewaard",
+          "label": {
+            "en": "🇳🇱 Lingewaard",
+            "fr": "🇳🇱 Lingewaard",
+            "de": "🇳🇱 Lingewaard",
+            "es": "🇳🇱 Lingewaard"
+          }
+        },
+        {
+          "value": "middelburg-vlissingen",
+          "label": {
+            "en": "🇳🇱 Middelburg-Vlissingen",
+            "fr": "🇳🇱 Middelburg-Vlissingen",
+            "de": "🇳🇱 Middelburg-Vlissingen",
+            "es": "🇳🇱 Middelburg-Vlissingen"
+          }
+        },
+        {
+          "value": "mijnafvalzaken",
+          "label": {
+            "en": "🇳🇱 Mijn Afvalzaken",
+            "fr": "🇳🇱 Mijn Afvalzaken",
+            "de": "🇳🇱 Mijn Afvalzaken",
+            "es": "🇳🇱 Mijn Afvalzaken"
+          }
+        },
+        {
+          "value": "offalkalinder",
+          "label": {
+            "en": "🇳🇱 Ôffalkalinder",
+            "fr": "🇳🇱 Ôffalkalinder",
+            "de": "🇳🇱 Ôffalkalinder",
+            "es": "🇳🇱 Ôffalkalinder"
+          }
+        },
+        {
+          "value": "peelenmaas",
+          "label": {
+            "en": "🇳🇱 Peel en Maas",
+            "fr": "🇳🇱 Peel en Maas",
+            "de": "🇳🇱 Peel en Maas",
+            "es": "🇳🇱 Peel en Maas"
+          }
+        },
+        {
+          "value": "prezero",
+          "label": {
+            "en": "🇳🇱 PreZero",
+            "fr": "🇳🇱 PreZero",
+            "de": "🇳🇱 PreZero",
+            "es": "🇳🇱 PreZero"
+          }
+        },
+        {
+          "value": "purmerend",
+          "label": {
+            "en": "🇳🇱 Purmerend",
+            "fr": "🇳🇱 Purmerend",
+            "de": "🇳🇱 Purmerend",
+            "es": "🇳🇱 Purmerend"
+          }
+        },
+        {
+          "value": "rwm",
+          "label": {
+            "en": "🇳🇱 RWM",
+            "fr": "🇳🇱 RWM",
+            "de": "🇳🇱 RWM",
+            "es": "🇳🇱 RWM"
+          }
+        },
+        {
+          "value": "saver",
+          "label": {
+            "en": "🇳🇱 Saver",
+            "fr": "🇳🇱 Saver",
+            "de": "🇳🇱 Saver",
+            "es": "🇳🇱 Saver"
+          }
+        },
+        {
+          "value": "schouwen-duiveland",
+          "label": {
+            "en": "🇳🇱 Schouwen-Duiveland",
+            "fr": "🇳🇱 Schouwen-Duiveland",
+            "de": "🇳🇱 Schouwen-Duiveland",
+            "es": "🇳🇱 Schouwen-Duiveland"
+          }
+        },
+        {
+          "value": "sliedrecht",
+          "label": {
+            "en": "🇳🇱 Sliedrecht",
+            "fr": "🇳🇱 Sliedrecht",
+            "de": "🇳🇱 Sliedrecht",
+            "es": "🇳🇱 Sliedrecht"
+          }
+        },
+        {
+          "value": "spaarnelanden",
+          "label": {
+            "en": "🇳🇱 Spaarnelanden",
+            "fr": "🇳🇱 Spaarnelanden",
+            "de": "🇳🇱 Spaarnelanden",
+            "es": "🇳🇱 Spaarnelanden"
+          }
+        },
+        {
+          "value": "sudwestfryslan",
+          "label": {
+            "en": "🇳🇱 Súdwest-Fryslân",
+            "fr": "🇳🇱 Súdwest-Fryslân",
+            "de": "🇳🇱 Súdwest-Fryslân",
+            "es": "🇳🇱 Súdwest-Fryslân"
+          }
+        },
+        {
+          "value": "venray",
+          "label": {
+            "en": "🇳🇱 Venray",
+            "fr": "🇳🇱 Venray",
+            "de": "🇳🇱 Venray",
+            "es": "🇳🇱 Venray"
+          }
+        },
+        {
+          "value": "voorschoten",
+          "label": {
+            "en": "🇳🇱 Voorschoten",
+            "fr": "🇳🇱 Voorschoten",
+            "de": "🇳🇱 Voorschoten",
+            "es": "🇳🇱 Voorschoten"
+          }
+        },
+        {
+          "value": "waalre",
+          "label": {
+            "en": "🇳🇱 Waalre",
+            "fr": "🇳🇱 Waalre",
+            "de": "🇳🇱 Waalre",
+            "es": "🇳🇱 Waalre"
+          }
+        },
+        {
+          "value": "zrd",
+          "label": {
+            "en": "🇳🇱 ZRD",
+            "fr": "🇳🇱 ZRD",
+            "de": "🇳🇱 ZRD",
+            "es": "🇳🇱 ZRD"
+          }
+        },
+        {
+          "value": "circulus",
+          "label": {
+            "en": "🇳🇱 Circulus",
+            "fr": "🇳🇱 Circulus",
+            "de": "🇳🇱 Circulus",
+            "es": "🇳🇱 Circulus"
+          }
+        },
+        {
+          "value": "drimmelen",
+          "label": {
+            "en": "🇳🇱 Drimmelen",
+            "fr": "🇳🇱 Drimmelen",
+            "de": "🇳🇱 Drimmelen",
+            "es": "🇳🇱 Drimmelen"
+          }
+        },
+        {
+          "value": "irado",
+          "label": {
+            "en": "🇳🇱 Irado",
+            "fr": "🇳🇱 Irado",
+            "de": "🇳🇱 Irado",
+            "es": "🇳🇱 Irado"
+          }
+        },
+        {
+          "value": "maassluis",
+          "label": {
+            "en": "🇳🇱 Maassluis",
+            "fr": "🇳🇱 Maassluis",
+            "de": "🇳🇱 Maassluis",
+            "es": "🇳🇱 Maassluis"
+          }
+        },
+        {
+          "value": "oudeijsselstreek",
+          "label": {
+            "en": "🇳🇱 Oude IJsselstreek",
+            "fr": "🇳🇱 Oude IJsselstreek",
+            "de": "🇳🇱 Oude IJsselstreek",
+            "es": "🇳🇱 Oude IJsselstreek"
+          }
+        },
+        {
+          "value": "rd4",
+          "label": {
+            "en": "🇳🇱 RD4",
+            "fr": "🇳🇱 RD4",
+            "de": "🇳🇱 RD4",
+            "es": "🇳🇱 RD4"
+          }
+        },
+        {
+          "value": "reinis",
+          "label": {
+            "en": "🇳🇱 Reinis",
+            "fr": "🇳🇱 Reinis",
+            "de": "🇳🇱 Reinis",
+            "es": "🇳🇱 Reinis"
+          }
+        },
+        {
+          "value": "rova",
+          "label": {
+            "en": "🇳🇱 ROVA",
+            "fr": "🇳🇱 ROVA",
+            "de": "🇳🇱 ROVA",
+            "es": "🇳🇱 ROVA"
+          }
+        }
+      ]
+    },
+    {
+      "key": "postcode",
+      "type": "string",
+      "label": {
+        "en": "Postcode",
+        "fr": "Code postal",
+        "de": "Postleitzahl",
+        "es": "Código postal"
+      },
+      "placeholder": {
+        "en": "e.g. 6000 or 1234AB",
+        "fr": "ex. 6000 ou 1234AB",
+        "de": "z. B. 6000 oder 1234AB",
+        "es": "p. ej. 6000 o 1234AB"
+      },
+      "required": true
+    },
+    {
+      "key": "house_number",
+      "type": "string",
+      "label": {
+        "en": "House number",
+        "fr": "Numéro",
+        "de": "Hausnummer",
+        "es": "Número"
+      },
+      "placeholder": {
+        "en": "e.g. 12",
+        "fr": "ex. 12",
+        "de": "z. B. 12",
+        "es": "p. ej. 12"
+      },
+      "required": true
+    },
+    {
+      "key": "house_number_suffix",
+      "type": "string",
+      "label": {
+        "en": "House number suffix",
+        "fr": "Complément de numéro",
+        "de": "Hausnummerzusatz",
+        "es": "Complemento del número"
+      },
+      "description": {
+        "en": "Letter or addition, e.g. A or bis (optional).",
+        "fr": "Lettre ou ajout, ex. A ou bis (facultatif).",
+        "de": "Buchstabe oder Zusatz, z. B. A (optional).",
+        "es": "Letra o añadido, p. ej. A (opcional)."
+      },
+      "placeholder": {
+        "en": "e.g. A",
+        "fr": "ex. A",
+        "de": "z. B. A",
+        "es": "p. ej. A"
+      },
+      "required": false
+    },
+    {
+      "key": "street_name",
+      "type": "string",
+      "label": {
+        "en": "Street name",
+        "fr": "Nom de rue",
+        "de": "Straßenname",
+        "es": "Nombre de la calle"
+      },
+      "description": {
+        "en": "Required for Recycle! and Limburg.net (Belgium), as written in the app.",
+        "fr": "Obligatoire pour Recycle! et Limburg.net (Belgique), tel qu'écrit dans l'application.",
+        "de": "Erforderlich für Recycle! und Limburg.net (Belgien), wie in der App geschrieben.",
+        "es": "Obligatorio para Recycle! y Limburg.net (Bélgica), tal como figura en la aplicación."
+      },
+      "placeholder": {
+        "en": "e.g. Rue de la Montagne",
+        "fr": "ex. Rue de la Montagne",
+        "de": "z. B. Rue de la Montagne",
+        "es": "p. ej. Rue de la Montagne"
+      },
+      "required": false
+    },
+    {
+      "key": "city_name",
+      "type": "string",
+      "label": {
+        "en": "Municipality",
+        "fr": "Commune",
+        "de": "Gemeinde",
+        "es": "Municipio"
+      },
+      "description": {
+        "en": "Required for Limburg.net only.",
+        "fr": "Obligatoire pour Limburg.net uniquement.",
+        "de": "Nur für Limburg.net erforderlich.",
+        "es": "Solo obligatorio para Limburg.net."
+      },
+      "placeholder": {
+        "en": "e.g. Hasselt",
+        "fr": "ex. Hasselt",
+        "de": "z. B. Hasselt",
+        "es": "p. ej. Hasselt"
+      },
+      "required": false
+    },
+    {
+      "key": "language",
+      "type": "select",
+      "label": {
+        "en": "Language of device names and scene texts",
+        "fr": "Langue des appareils et des textes de scène",
+        "de": "Sprache der Gerätenamen und Szenentexte",
+        "es": "Idioma de los dispositivos y textos de escena"
+      },
+      "required": false,
+      "default": "fr",
+      "options": [
+        {
+          "value": "en",
+          "label": {
+            "en": "English",
+            "fr": "Anglais",
+            "de": "Englisch",
+            "es": "Inglés"
+          }
+        },
+        {
+          "value": "fr",
+          "label": {
+            "en": "French",
+            "fr": "Français",
+            "de": "Französisch",
+            "es": "Francés"
+          }
+        },
+        {
+          "value": "de",
+          "label": {
+            "en": "German",
+            "fr": "Allemand",
+            "de": "Deutsch",
+            "es": "Alemán"
+          }
+        },
+        {
+          "value": "es",
+          "label": {
+            "en": "Spanish",
+            "fr": "Espagnol",
+            "de": "Spanisch",
+            "es": "Español"
+          }
+        },
+        {
+          "value": "nl",
+          "label": {
+            "en": "Dutch",
+            "fr": "Néerlandais",
+            "de": "Niederländisch",
+            "es": "Neerlandés"
+          }
+        }
+      ]
+    },
+    {
+      "key": "evening_reminder_hour",
+      "type": "number",
+      "label": {
+        "en": "Evening reminder hour",
+        "fr": "Heure du rappel du soir",
+        "de": "Uhrzeit der Abenderinnerung",
+        "es": "Hora del recordatorio de la tarde"
+      },
+      "description": {
+        "en": "Hour (0-23) of the \"collection tomorrow\" scene trigger.",
+        "fr": "Heure (0-23) du déclencheur de scène « collecte demain ».",
+        "de": "Stunde (0-23) des Szenenauslösers „Abholung morgen\".",
+        "es": "Hora (0-23) del disparador de escena «recogida mañana»."
+      },
+      "required": false,
+      "default": 19,
+      "min": 0,
+      "max": 23
+    },
+    {
+      "key": "morning_reminder_hour",
+      "type": "number",
+      "label": {
+        "en": "Morning reminder hour",
+        "fr": "Heure du rappel du matin",
+        "de": "Uhrzeit der Morgenerinnerung",
+        "es": "Hora del recordatorio de la mañana"
+      },
+      "description": {
+        "en": "Hour (0-23) of the \"collection today\" scene trigger.",
+        "fr": "Heure (0-23) du déclencheur de scène « collecte aujourd'hui ».",
+        "de": "Stunde (0-23) des Szenenauslösers „Abholung heute\".",
+        "es": "Hora (0-23) del disparador de escena «recogida hoy»."
+      },
+      "required": false,
+      "default": 7,
+      "min": 0,
+      "max": 23
+    },
+    {
+      "key": "refresh_interval_hours",
+      "type": "number",
+      "label": {
+        "en": "Refresh interval (hours)",
+        "fr": "Intervalle de mise à jour (heures)",
+        "de": "Aktualisierungsintervall (Stunden)",
+        "es": "Intervalo de actualización (horas)"
+      },
+      "description": {
+        "en": "How often the schedule is fetched from the collector.",
+        "fr": "Fréquence de lecture du calendrier chez le collecteur.",
+        "de": "Wie oft der Kalender beim Entsorger abgerufen wird.",
+        "es": "Frecuencia con la que se lee el calendario del recolector."
+      },
+      "required": false,
+      "default": 12,
+      "min": 1,
+      "max": 72
+    }
+  ],
+  "actions": [
+    {
+      "key": "fetch_schedule",
+      "label": {
+        "en": "Fetch the schedule now",
+        "fr": "Lire le calendrier maintenant",
+        "de": "Kalender jetzt abrufen",
+        "es": "Leer el calendario ahora"
+      },
+      "timeout_seconds": 60
+    }
+  ],
+  "scene_triggers": [
+    {
+      "key": "collection_tomorrow",
+      "label": {
+        "en": "Waste collection tomorrow",
+        "fr": "Collecte de déchets demain",
+        "de": "Müllabfuhr morgen",
+        "es": "Recogida de residuos mañana"
+      },
+      "description": {
+        "en": "Fired in the evening for every waste type collected tomorrow.",
+        "fr": "Déclenché le soir pour chaque type de déchet collecté demain.",
+        "de": "Wird abends für jede morgen abgeholte Abfallart ausgelöst.",
+        "es": "Se activa por la tarde para cada tipo de residuo recogido mañana."
+      },
+      "fields": [
+        {
+          "key": "waste_type",
+          "type": "multi_select",
+          "label": {
+            "en": "Waste types",
+            "fr": "Types de déchets",
+            "de": "Abfallarten",
+            "es": "Tipos de residuos"
+          },
+          "options": [
+            {
+              "value": "residual",
+              "label": {
+                "en": "Residual waste",
+                "fr": "Ordures ménagères",
+                "de": "Restmüll",
+                "es": "Residuos generales"
+              }
+            },
+            {
+              "value": "organic",
+              "label": {
+                "en": "Organic waste",
+                "fr": "Déchets organiques",
+                "de": "Biomüll",
+                "es": "Residuos orgánicos"
+              }
+            },
+            {
+              "value": "pmd",
+              "label": {
+                "en": "Plastic & cans (PMD)",
+                "fr": "PMC / emballages",
+                "de": "Verpackungen",
+                "es": "Envases (PMD)"
+              }
+            },
+            {
+              "value": "paper",
+              "label": {
+                "en": "Paper & cardboard",
+                "fr": "Papiers-cartons",
+                "de": "Papier & Pappe",
+                "es": "Papel y cartón"
+              }
+            },
+            {
+              "value": "glass",
+              "label": {
+                "en": "Glass",
+                "fr": "Verre",
+                "de": "Glas",
+                "es": "Vidrio"
+              }
+            },
+            {
+              "value": "textile",
+              "label": {
+                "en": "Textile",
+                "fr": "Textile",
+                "de": "Textilien",
+                "es": "Textil"
+              }
+            },
+            {
+              "value": "garden",
+              "label": {
+                "en": "Garden waste",
+                "fr": "Déchets verts",
+                "de": "Grünschnitt",
+                "es": "Restos de jardín"
+              }
+            },
+            {
+              "value": "bulky",
+              "label": {
+                "en": "Bulky waste",
+                "fr": "Encombrants",
+                "de": "Sperrmüll",
+                "es": "Voluminosos"
+              }
+            },
+            {
+              "value": "hazardous",
+              "label": {
+                "en": "Hazardous waste",
+                "fr": "Déchets dangereux",
+                "de": "Sondermüll",
+                "es": "Residuos peligrosos"
+              }
+            },
+            {
+              "value": "christmas_tree",
+              "label": {
+                "en": "Christmas trees",
+                "fr": "Sapins de Noël",
+                "de": "Weihnachtsbäume",
+                "es": "Árboles de Navidad"
+              }
+            },
+            {
+              "value": "soft_plastic",
+              "label": {
+                "en": "Soft plastics",
+                "fr": "Plastiques souples",
+                "de": "Weichplastik",
+                "es": "Plásticos blandos"
+              }
+            },
+            {
+              "value": "other",
+              "label": {
+                "en": "Other",
+                "fr": "Autre",
+                "de": "Sonstiges",
+                "es": "Otros"
+              }
+            }
+          ]
+        }
+      ],
+      "variables": [
+        {
+          "key": "waste_type",
+          "type": "string",
+          "label": {
+            "en": "Waste type (key)",
+            "fr": "Type de déchet (clé)",
+            "de": "Abfallart (Schlüssel)",
+            "es": "Tipo de residuo (clave)"
+          }
+        },
+        {
+          "key": "waste_name",
+          "type": "string",
+          "label": {
+            "en": "Waste name",
+            "fr": "Nom du déchet",
+            "de": "Abfallname",
+            "es": "Nombre del residuo"
+          }
+        },
+        {
+          "key": "date",
+          "type": "string",
+          "label": {
+            "en": "Date (YYYY-MM-DD)",
+            "fr": "Date (AAAA-MM-JJ)",
+            "de": "Datum (JJJJ-MM-TT)",
+            "es": "Fecha (AAAA-MM-DD)"
+          }
+        },
+        {
+          "key": "date_text",
+          "type": "string",
+          "label": {
+            "en": "Date (text)",
+            "fr": "Date (texte)",
+            "de": "Datum (Text)",
+            "es": "Fecha (texto)"
+          }
+        },
+        {
+          "key": "all_waste_names",
+          "type": "string",
+          "label": {
+            "en": "Everything collected that day",
+            "fr": "Tout ce qui est collecté ce jour-là",
+            "de": "Alles, was an dem Tag abgeholt wird",
+            "es": "Todo lo que se recoge ese día"
+          }
+        }
+      ]
+    },
+    {
+      "key": "collection_today",
+      "label": {
+        "en": "Waste collection today",
+        "fr": "Collecte de déchets aujourd'hui",
+        "de": "Müllabfuhr heute",
+        "es": "Recogida de residuos hoy"
+      },
+      "description": {
+        "en": "Fired in the morning for every waste type collected today.",
+        "fr": "Déclenché le matin pour chaque type de déchet collecté aujourd'hui.",
+        "de": "Wird morgens für jede heute abgeholte Abfallart ausgelöst.",
+        "es": "Se activa por la mañana para cada tipo de residuo recogido hoy."
+      },
+      "fields": [
+        {
+          "key": "waste_type",
+          "type": "multi_select",
+          "label": {
+            "en": "Waste types",
+            "fr": "Types de déchets",
+            "de": "Abfallarten",
+            "es": "Tipos de residuos"
+          },
+          "options": [
+            {
+              "value": "residual",
+              "label": {
+                "en": "Residual waste",
+                "fr": "Ordures ménagères",
+                "de": "Restmüll",
+                "es": "Residuos generales"
+              }
+            },
+            {
+              "value": "organic",
+              "label": {
+                "en": "Organic waste",
+                "fr": "Déchets organiques",
+                "de": "Biomüll",
+                "es": "Residuos orgánicos"
+              }
+            },
+            {
+              "value": "pmd",
+              "label": {
+                "en": "Plastic & cans (PMD)",
+                "fr": "PMC / emballages",
+                "de": "Verpackungen",
+                "es": "Envases (PMD)"
+              }
+            },
+            {
+              "value": "paper",
+              "label": {
+                "en": "Paper & cardboard",
+                "fr": "Papiers-cartons",
+                "de": "Papier & Pappe",
+                "es": "Papel y cartón"
+              }
+            },
+            {
+              "value": "glass",
+              "label": {
+                "en": "Glass",
+                "fr": "Verre",
+                "de": "Glas",
+                "es": "Vidrio"
+              }
+            },
+            {
+              "value": "textile",
+              "label": {
+                "en": "Textile",
+                "fr": "Textile",
+                "de": "Textilien",
+                "es": "Textil"
+              }
+            },
+            {
+              "value": "garden",
+              "label": {
+                "en": "Garden waste",
+                "fr": "Déchets verts",
+                "de": "Grünschnitt",
+                "es": "Restos de jardín"
+              }
+            },
+            {
+              "value": "bulky",
+              "label": {
+                "en": "Bulky waste",
+                "fr": "Encombrants",
+                "de": "Sperrmüll",
+                "es": "Voluminosos"
+              }
+            },
+            {
+              "value": "hazardous",
+              "label": {
+                "en": "Hazardous waste",
+                "fr": "Déchets dangereux",
+                "de": "Sondermüll",
+                "es": "Residuos peligrosos"
+              }
+            },
+            {
+              "value": "christmas_tree",
+              "label": {
+                "en": "Christmas trees",
+                "fr": "Sapins de Noël",
+                "de": "Weihnachtsbäume",
+                "es": "Árboles de Navidad"
+              }
+            },
+            {
+              "value": "soft_plastic",
+              "label": {
+                "en": "Soft plastics",
+                "fr": "Plastiques souples",
+                "de": "Weichplastik",
+                "es": "Plásticos blandos"
+              }
+            },
+            {
+              "value": "other",
+              "label": {
+                "en": "Other",
+                "fr": "Autre",
+                "de": "Sonstiges",
+                "es": "Otros"
+              }
+            }
+          ]
+        }
+      ],
+      "variables": [
+        {
+          "key": "waste_type",
+          "type": "string",
+          "label": {
+            "en": "Waste type (key)",
+            "fr": "Type de déchet (clé)",
+            "de": "Abfallart (Schlüssel)",
+            "es": "Tipo de residuo (clave)"
+          }
+        },
+        {
+          "key": "waste_name",
+          "type": "string",
+          "label": {
+            "en": "Waste name",
+            "fr": "Nom du déchet",
+            "de": "Abfallname",
+            "es": "Nombre del residuo"
+          }
+        },
+        {
+          "key": "date",
+          "type": "string",
+          "label": {
+            "en": "Date (YYYY-MM-DD)",
+            "fr": "Date (AAAA-MM-JJ)",
+            "de": "Datum (JJJJ-MM-TT)",
+            "es": "Fecha (AAAA-MM-DD)"
+          }
+        },
+        {
+          "key": "date_text",
+          "type": "string",
+          "label": {
+            "en": "Date (text)",
+            "fr": "Date (texte)",
+            "de": "Datum (Text)",
+            "es": "Fecha (texto)"
+          }
+        },
+        {
+          "key": "all_waste_names",
+          "type": "string",
+          "label": {
+            "en": "Everything collected that day",
+            "fr": "Tout ce qui est collecté ce jour-là",
+            "de": "Alles, was an dem Tag abgeholt wird",
+            "es": "Todo lo que se recoge ese día"
+          }
+        }
+      ]
+    }
+  ],
+  "scene_actions": [
+    {
+      "key": "get_next_collection",
+      "label": {
+        "en": "Get the next waste collection",
+        "fr": "Obtenir la prochaine collecte",
+        "de": "Nächste Abholung ermitteln",
+        "es": "Obtener la próxima recogida"
+      },
+      "description": {
+        "en": "The next collection, of one waste type or of any.",
+        "fr": "La prochaine collecte, d'un type de déchet ou de n'importe lequel.",
+        "de": "Die nächste Abholung einer oder beliebiger Abfallart.",
+        "es": "La próxima recogida, de un tipo de residuo o de cualquiera."
+      },
+      "timeout_seconds": 10,
+      "fields": [
+        {
+          "key": "waste_type",
+          "type": "select",
+          "label": {
+            "en": "Waste type (empty: any)",
+            "fr": "Type de déchet (vide : tous)",
+            "de": "Abfallart (leer: alle)",
+            "es": "Tipo de residuo (vacío: todos)"
+          },
+          "options": [
+            {
+              "value": "residual",
+              "label": {
+                "en": "Residual waste",
+                "fr": "Ordures ménagères",
+                "de": "Restmüll",
+                "es": "Residuos generales"
+              }
+            },
+            {
+              "value": "organic",
+              "label": {
+                "en": "Organic waste",
+                "fr": "Déchets organiques",
+                "de": "Biomüll",
+                "es": "Residuos orgánicos"
+              }
+            },
+            {
+              "value": "pmd",
+              "label": {
+                "en": "Plastic & cans (PMD)",
+                "fr": "PMC / emballages",
+                "de": "Verpackungen",
+                "es": "Envases (PMD)"
+              }
+            },
+            {
+              "value": "paper",
+              "label": {
+                "en": "Paper & cardboard",
+                "fr": "Papiers-cartons",
+                "de": "Papier & Pappe",
+                "es": "Papel y cartón"
+              }
+            },
+            {
+              "value": "glass",
+              "label": {
+                "en": "Glass",
+                "fr": "Verre",
+                "de": "Glas",
+                "es": "Vidrio"
+              }
+            },
+            {
+              "value": "textile",
+              "label": {
+                "en": "Textile",
+                "fr": "Textile",
+                "de": "Textilien",
+                "es": "Textil"
+              }
+            },
+            {
+              "value": "garden",
+              "label": {
+                "en": "Garden waste",
+                "fr": "Déchets verts",
+                "de": "Grünschnitt",
+                "es": "Restos de jardín"
+              }
+            },
+            {
+              "value": "bulky",
+              "label": {
+                "en": "Bulky waste",
+                "fr": "Encombrants",
+                "de": "Sperrmüll",
+                "es": "Voluminosos"
+              }
+            },
+            {
+              "value": "hazardous",
+              "label": {
+                "en": "Hazardous waste",
+                "fr": "Déchets dangereux",
+                "de": "Sondermüll",
+                "es": "Residuos peligrosos"
+              }
+            },
+            {
+              "value": "christmas_tree",
+              "label": {
+                "en": "Christmas trees",
+                "fr": "Sapins de Noël",
+                "de": "Weihnachtsbäume",
+                "es": "Árboles de Navidad"
+              }
+            },
+            {
+              "value": "soft_plastic",
+              "label": {
+                "en": "Soft plastics",
+                "fr": "Plastiques souples",
+                "de": "Weichplastik",
+                "es": "Plásticos blandos"
+              }
+            },
+            {
+              "value": "other",
+              "label": {
+                "en": "Other",
+                "fr": "Autre",
+                "de": "Sonstiges",
+                "es": "Otros"
+              }
+            }
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "key": "found",
+          "type": "boolean",
+          "label": {
+            "en": "Collection found",
+            "fr": "Collecte trouvée",
+            "de": "Abholung gefunden",
+            "es": "Recogida encontrada"
+          }
+        },
+        {
+          "key": "waste_type",
+          "type": "string",
+          "label": {
+            "en": "Waste type (key)",
+            "fr": "Type de déchet (clé)",
+            "de": "Abfallart (Schlüssel)",
+            "es": "Tipo de residuo (clave)"
+          }
+        },
+        {
+          "key": "waste_name",
+          "type": "string",
+          "label": {
+            "en": "Waste name",
+            "fr": "Nom du déchet",
+            "de": "Abfallname",
+            "es": "Nombre del residuo"
+          }
+        },
+        {
+          "key": "date",
+          "type": "string",
+          "label": {
+            "en": "Date (YYYY-MM-DD)",
+            "fr": "Date (AAAA-MM-JJ)",
+            "de": "Datum (JJJJ-MM-TT)",
+            "es": "Fecha (AAAA-MM-DD)"
+          }
+        },
+        {
+          "key": "date_text",
+          "type": "string",
+          "label": {
+            "en": "Date (text)",
+            "fr": "Date (texte)",
+            "de": "Datum (Text)",
+            "es": "Fecha (texto)"
+          }
+        },
+        {
+          "key": "days_until",
+          "type": "number",
+          "label": {
+            "en": "Days until the collection",
+            "fr": "Jours avant la collecte",
+            "de": "Tage bis zur Abholung",
+            "es": "Días hasta la recogida"
+          }
+        }
+      ]
+    },
+    {
+      "key": "refresh_schedule",
+      "label": {
+        "en": "Refresh the waste schedule",
+        "fr": "Mettre à jour le calendrier des collectes",
+        "de": "Abfuhrkalender aktualisieren",
+        "es": "Actualizar el calendario de recogidas"
+      },
+      "description": {
+        "en": "Fetch the schedule from the collector now.",
+        "fr": "Relit le calendrier chez le collecteur maintenant.",
+        "de": "Ruft den Kalender jetzt beim Entsorger ab.",
+        "es": "Lee ahora el calendario del recolector."
+      },
+      "timeout_seconds": 60,
+      "outputs": [
+        {
+          "key": "collections_count",
+          "type": "number",
+          "label": {
+            "en": "Collections found",
+            "fr": "Collectes trouvées",
+            "de": "Gefundene Abholungen",
+            "es": "Recogidas encontradas"
+          }
+        }
+      ]
+    }
+  ],
+  "widgets": [
+    {
+      "key": "next_collection",
+      "label": {
+        "en": "Next waste collection",
+        "fr": "Prochaine collecte",
+        "de": "Nächste Müllabfuhr",
+        "es": "Próxima recogida"
+      },
+      "description": {
+        "en": "What is collected next, when, and in how many days.",
+        "fr": "Ce qui est collecté ensuite, quand, et dans combien de jours.",
+        "de": "Was als Nächstes abgeholt wird, wann und in wie vielen Tagen.",
+        "es": "Qué se recoge después, cuándo y en cuántos días."
+      },
+      "icon": "trash-2",
+      "action_timeout_seconds": 60
+    },
+    {
+      "key": "upcoming_collections",
+      "label": {
+        "en": "Upcoming waste collections",
+        "fr": "Collectes à venir",
+        "de": "Kommende Abholungen",
+        "es": "Próximas recogidas"
+      },
+      "description": {
+        "en": "The list of the next collections.",
+        "fr": "La liste des prochaines collectes.",
+        "de": "Die Liste der nächsten Abholungen.",
+        "es": "La lista de las próximas recogidas."
+      },
+      "icon": "calendar",
+      "settings": [
+        {
+          "key": "max_items",
+          "type": "number",
+          "label": {
+            "en": "Number of collections shown",
+            "fr": "Nombre de collectes affichées",
+            "de": "Anzahl angezeigter Abholungen",
+            "es": "Número de recogidas mostradas"
+          },
+          "required": false,
+          "default": 5,
+          "min": 1,
+          "max": 8
+        }
+      ]
+    }
+  ]
+}

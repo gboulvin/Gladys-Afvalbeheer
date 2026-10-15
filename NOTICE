@@ -1,0 +1,11 @@
+Gladys Afvalbeheer
+Copyright 2026 gboulvin
+
+This integration is built from the official Gladys Assistant JavaScript
+integration template (https://github.com/GladysAssistant/integration-template-js,
+Apache-2.0).
+
+The collector drivers (endpoints, request parameters and answer formats of the
+waste collectors' public APIs) are ported to JavaScript from the Home Assistant
+"Afvalbeheer" custom component by pippyn and contributors
+(https://github.com/pippyn/Home-Assistant-Sensor-Afvalbeheer, Apache-2.0).
