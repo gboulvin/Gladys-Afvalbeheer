@@ -8,8 +8,8 @@
     "de": "Müllabfuhrtermine in den Niederlanden und Belgien (Recycle!, Tibi, Ipalle, HVC...)",
     "es": "Días de recogida de residuos en Países Bajos y Bélgica (Recycle!, Tibi, Ipalle, HVC...)"
   },
-  "version": "1.0.1",
-  "docker_image": "ghcr.io/gboulvin/gladys-afvalbeheer:1.0.1",
+  "version": "1.0.2",
+  "docker_image": "ghcr.io/gboulvin/gladys-afvalbeheer:1.0.2",
   "gladys_version": ">=5.1.0",
   "cover_image": "https://raw.githubusercontent.com/gboulvin/Gladys-Afvalbeheer/main/cover.png",
   "categories": ["services", "environment"],

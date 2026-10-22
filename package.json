@@ -1,6 +1,6 @@
 {
   "name": "gladys-afvalbeheer",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
   "description": "Gladys Assistant integration: waste collection schedules in the Netherlands and Belgium (Afvalbeheer).",
   "type": "module",

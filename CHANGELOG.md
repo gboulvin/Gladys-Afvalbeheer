@@ -10,6 +10,8 @@ the notes of the version's GitHub Release.
 
 ## [Unreleased]
 
+## [1.0.2] - 2026-10-22
+
 ### Security
 
 - `brace-expansion`, pulled in by ESLint, raised to 5.0.12 against the
@@ -43,6 +45,7 @@ the notes of the version's GitHub Release.
 - English, French, German and Spanish everywhere (configuration, scenes,
   widgets, documentation); device names and scene texts also in Dutch.
 
-[Unreleased]: https://github.com/gboulvin/Gladys-Afvalbeheer/compare/v1.0.1...HEAD
+[Unreleased]: https://github.com/gboulvin/Gladys-Afvalbeheer/compare/v1.0.2...HEAD
+[1.0.2]: https://github.com/gboulvin/Gladys-Afvalbeheer/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/gboulvin/Gladys-Afvalbeheer/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/gboulvin/Gladys-Afvalbeheer/releases/tag/v1.0.0
