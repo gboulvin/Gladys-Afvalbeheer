@@ -58,9 +58,9 @@ test('every text of the manifest exists in English, French, German and Spanish',
   }
 });
 
-test('the integration is declared cloud-only, for Gladys 5.1+', () => {
+test('the integration is declared cloud-only, for Gladys 5.3+ (catalog keywords and countries)', () => {
   assert.deepEqual(manifest.transports, ['cloud']);
-  assert.match(manifest.gladys_version, /^>=5\.1\.0$/);
+  assert.match(manifest.gladys_version, /^>=5\.3\.0$/);
   assert.ok(manifest.name.length >= 3 && manifest.name.length <= 30);
   assert.ok(manifest.categories.length >= 1 && manifest.categories.length <= 3);
 });
