@@ -10,6 +10,24 @@ the notes of the version's GitHub Release.
 
 ## [Unreleased]
 
+### Added
+
+- Pick your Gladys house in the configuration: its address is found from its
+  location on the map (OpenStreetMap). The address fields become optional
+  corrections (e.g. the house number when the house is pinned next door).
+
+### Changed
+
+- Gladys 5.2.0 or later is required (house selection), and the integration
+  asks for the house location on the install screen.
+
+### Fixed
+
+- Adding the devices failed with "HTTP 422 — t_device_feature.min cannot be
+  null": the "Next collection" text feature now declares its min and max.
+- Recycle!: a street written with other accents than in the app ("Rue
+  Basslé" / "Rue Bassle") is now found.
+
 ## [1.0.0] - 2026-10-15
 
 ### Added

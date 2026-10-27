@@ -90,11 +90,16 @@ Ihr Entsorger fehlt? Eröffnen Sie ein Issue im
 1. Öffnen Sie den Reiter **Konfiguration** der Integration.
 2. Wählen Sie Ihren **Entsorger**. In Belgien ist es fast überall
    **Recycle!** (**Limburg.net** in der Provinz Limburg).
-3. Geben Sie **Postleitzahl** und **Hausnummer** ein (und ggf. den
-   **Zusatz**, z. B. `A`).
-4. Für **Recycle!** und **Limburg.net** zusätzlich den **Straßennamen**,
-   wie in der Recycle!-App geschrieben. Limburg.net benötigt außerdem die
-   **Gemeinde**.
+3. Wählen Sie Ihr **Haus**: Seine Adresse wird über OpenStreetMap aus
+   seinem Standort auf der Karte ermittelt (Gladys-Einstellungen → Häuser).
+   Mehr brauchen die meisten Nutzer nicht.
+4. Die **Adressfelder** sind optional: Leer lassen, um die Adresse des Hauses
+   zu verwenden, oder nur ausfüllen, was korrigiert werden muss — meist die
+   **Hausnummer** (und der **Zusatz**, z. B. `A`), wenn das Haus beim Nachbarn
+   gesetzt ist, oder der **Straßenname**, wenn er anders als in der
+   Recycle!-App geschrieben ist. Ohne Haus geben Sie Postleitzahl und
+   Hausnummer ein (dazu den Straßennamen für Recycle! und Limburg.net und die
+   Gemeinde für Limburg.net).
 5. Wählen Sie die **Sprache** der Gerätenamen und Szenentexte (Englisch,
    Französisch, Deutsch, Spanisch oder Niederländisch) sowie die **Uhrzeiten**
    der Abend- und Morgenerinnerung (standardmäßig 19 und 7 Uhr).
@@ -122,7 +127,7 @@ eine unbekannte Fraktion behält ihren eigenen Namen.
 
 ## Szenen
 
-**Auslöser** (Gladys 5.1 oder neuer, Kategorie **Integrationen**):
+**Auslöser** (Gladys 5.2 oder neuer, Kategorie **Integrationen**):
 
 - **Müllabfuhr morgen** — zur Abenderinnerung ausgelöst, einmal pro am
   nächsten Tag abgeholter Abfallart.

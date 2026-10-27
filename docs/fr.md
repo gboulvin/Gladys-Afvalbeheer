@@ -92,11 +92,17 @@ Votre collecteur n'est pas dans la liste ? Ouvrez une issue sur le
 2. Choisissez votre **collecteur de déchets**. En Belgique, c'est
    **Recycle!** presque partout (**Limburg.net** dans la province de
    Limbourg).
-3. Saisissez votre **code postal** et votre **numéro** (et le
-   **complément**, ex. `A` ou `bis`, s'il y en a un).
-4. Pour **Recycle!** et **Limburg.net**, saisissez aussi le **nom de votre
-   rue**, tel qu'il apparaît dans l'application Recycle! (ex.
-   `Rue de la Montagne`). Limburg.net demande aussi votre **commune**.
+3. Choisissez votre **maison** : son adresse est retrouvée d'après sa
+   position sur la carte (paramètres de Gladys → Maisons), via OpenStreetMap.
+   C'est tout ce dont la plupart des utilisateurs ont besoin.
+4. Les champs d'**adresse** sont facultatifs : laissez-les vides pour
+   utiliser l'adresse de la maison, ou ne remplissez que ce qui doit être
+   corrigé — en général le **numéro** (et son **complément**, ex. `A` ou
+   `bis`) si la maison est placée chez le voisin, ou le **nom de rue** s'il
+   n'est pas écrit comme dans l'application Recycle! (ex.
+   `Rue de la Montagne`). Sans maison, renseignez le code postal et le numéro
+   (plus le nom de rue pour Recycle! et Limburg.net, et la commune pour
+   Limburg.net).
 5. Choisissez la **langue** des noms d'appareils et des textes de scène
    (anglais, français, allemand, espagnol ou néerlandais), et les **heures**
    des rappels du soir et du matin (19 h et 7 h par défaut).
@@ -125,7 +131,7 @@ nom.
 
 ## Scènes
 
-**Déclencheurs** (Gladys 5.1 ou plus récent, catégorie **Intégrations**) :
+**Déclencheurs** (Gladys 5.2 ou plus récent, catégorie **Intégrations**) :
 
 - **Collecte de déchets demain** — déclenché à l'heure du rappel du soir, une
   fois par type de déchet collecté le lendemain.

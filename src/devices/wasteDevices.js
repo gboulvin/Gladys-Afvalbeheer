@@ -79,6 +79,10 @@ export function buildDevice(gladys, config, fraction) {
         external_id: ids.feature(FEATURE.NEXT),
         category: DEVICE_FEATURE_CATEGORIES.TEXT,
         type: DEVICE_FEATURE_TYPES.TEXT.TEXT,
+        // Meaningless for a text, but Gladys stores min/max as NOT NULL
+        // columns: a feature without them is refused with a 422.
+        min: 0,
+        max: 0,
         read_only: true,
         has_feedback: false,
         keep_history: false,

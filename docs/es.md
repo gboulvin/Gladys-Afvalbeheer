@@ -90,11 +90,16 @@ web o de la aplicación del recolector. No se necesita cuenta.
 1. Abra la pestaña **Configuración** de la integración.
 2. Elija su **recolector de residuos**. En Bélgica es **Recycle!** casi en
    todas partes (**Limburg.net** en la provincia de Limburgo).
-3. Introduzca su **código postal** y su **número** (y el **complemento**, p.
-   ej. `A`, si lo hay).
-4. Para **Recycle!** y **Limburg.net**, introduzca también el **nombre de la
-   calle**, tal como aparece en la aplicación Recycle!. Limburg.net pide
-   además su **municipio**.
+3. Elija su **casa**: su dirección se obtiene de su ubicación en el mapa
+   (ajustes de Gladys → Casas) mediante OpenStreetMap. Es todo lo que necesita
+   la mayoría de los usuarios.
+4. Los campos de **dirección** son opcionales: déjelos vacíos para usar la
+   dirección de la casa, o rellene solo lo que haya que corregir —
+   normalmente el **número** (y su **complemento**, p. ej. `A`) si la casa
+   está situada en la del vecino, o el **nombre de la calle** si no está
+   escrito como en la aplicación Recycle!. Sin casa, introduzca el código
+   postal y el número (y el nombre de la calle para Recycle! y Limburg.net, y
+   el municipio para Limburg.net).
 5. Elija el **idioma** de los nombres de dispositivos y textos de escena
    (inglés, francés, alemán, español o neerlandés) y las **horas** de los
    recordatorios de la tarde y de la mañana (19:00 y 07:00 por defecto).
@@ -121,7 +126,7 @@ plásticos blandos; una fracción desconocida conserva su propio nombre.
 
 ## Escenas
 
-**Disparadores** (Gladys 5.1 o posterior, categoría **Integraciones**):
+**Disparadores** (Gladys 5.2 o posterior, categoría **Integraciones**):
 
 - **Recogida de residuos mañana** — se activa a la hora del recordatorio de
   la tarde, una vez por cada tipo de residuo recogido al día siguiente.

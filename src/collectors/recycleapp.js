@@ -11,6 +11,7 @@
 
 import { addDays } from '../dates.js';
 import { buildUrl, HttpError, requestJson } from '../http.js';
+import { normalizeName } from '../wasteTypes.js';
 
 const API = 'https://api.fostplus.be/recyclecms/public/v1';
 const HEADERS = { 'x-consumer': 'recycleapp.be' };
@@ -18,10 +19,27 @@ const HEADERS = { 'x-consumer': 'recycleapp.be' };
 const HORIZON_DAYS = 120;
 const PAGE_SIZE = 100;
 
+// Street names differ in accents and spelling between sources (OpenStreetMap
+// writes "Rue Basslé", Recycle! "Rue Bassle"): compare them accent-free.
+const simplify = (name) =>
+  normalizeName(name)
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim();
+
 function sameStreet(item, streetName) {
-  const wanted = streetName.trim().toLowerCase();
+  const wanted = simplify(streetName);
   const names = [item.name, ...Object.values(item.names ?? {})];
-  return names.some((name) => typeof name === 'string' && name.trim().toLowerCase() === wanted);
+  return names.some((name) => typeof name === 'string' && simplify(name) === wanted);
+}
+
+// The searches tried for a street, most precise first: as written, then
+// without accents (the search is accent-sensitive), then its longest word
+// alone ("Montagne" finds "Rue de la Montagne" written differently).
+function streetQueries(streetName) {
+  const plain = streetName.trim();
+  const accentFree = simplify(plain);
+  const longestWord = accentFree.split(' ').sort((a, b) => b.length - a.length)[0] ?? '';
+  return [...new Set([plain, accentFree, longestWord])].filter((query) => query.length >= 3);
 }
 
 async function resolveAddress({ postcode, streetName }) {
@@ -29,15 +47,26 @@ async function resolveAddress({ postcode, streetName }) {
     headers: HEADERS,
   });
   const candidates = (zipcodes?.items ?? []).filter((zip) => zip.code === postcode.trim());
+  const queries = streetQueries(streetName);
   for (const zip of candidates.length > 0 ? candidates : (zipcodes?.items ?? [])) {
-    const streets = await requestJson(
-      buildUrl(`${API}/streets`, { q: streetName.trim(), zipcodes: zip.id }),
-      { headers: HEADERS },
-    );
-    const items = streets?.items ?? [];
-    if (items.length > 0) {
-      const street = items.find((item) => sameStreet(item, streetName)) ?? items[0];
-      return { zipcodeId: zip.id, streetId: street.id };
+    let fallback = null;
+    for (const [index, q] of queries.entries()) {
+      const streets = await requestJson(buildUrl(`${API}/streets`, { q, zipcodes: zip.id }), {
+        headers: HEADERS,
+      });
+      const items = streets?.items ?? [];
+      const exact = items.find((item) => sameStreet(item, streetName));
+      if (exact) {
+        return { zipcodeId: zip.id, streetId: exact.id };
+      }
+      // Without an exact name, trust the search on the full name only: a
+      // single word can match another street.
+      if (!fallback && index < 2 && items.length > 0) {
+        fallback = items[0];
+      }
+    }
+    if (fallback) {
+      return { zipcodeId: zip.id, streetId: fallback.id };
     }
   }
   return null;

@@ -249,3 +249,29 @@ test('a provider error surfaces with its status and host', async (t) => {
   mockFetch(t, [[/rova\.nl/, new Response('boom', { status: 503 })]]);
   await assert.rejects(run('rova', NL_ADDRESS), /HTTP 503 from www\.rova\.nl/);
 });
+
+test('Recycle! finds a street written with other accents (OpenStreetMap vs Recycle!)', async (t) => {
+  const calls = mockFetch(t, [
+    [/\/zipcodes\?/, { items: [{ id: '6000-52011', code: '6000' }] }],
+    [
+      /\/streets\?/,
+      (url) =>
+        new URL(url).searchParams.get('q') === 'rue bassle'
+          ? { items: [{ id: 'street-bassle', name: 'Rue Bassle', names: {} }] }
+          : { items: [] },
+    ],
+    [/\/collections\?/, { items: [], pages: 1 }],
+  ]);
+  const auth = {};
+  await findCollector('recycleapp').driver.fetch(
+    { postcode: '6000', houseNumber: '10', suffix: '', streetName: 'Rue Basslé' },
+    { auth, today: TODAY },
+  );
+  assert.equal(auth.ids.streetId, 'street-bassle');
+  assert.deepEqual(
+    calls
+      .filter((call) => call.url.includes('/streets'))
+      .map((call) => new URL(call.url).searchParams.get('q')),
+    ['Rue Basslé', 'rue bassle'],
+  );
+});

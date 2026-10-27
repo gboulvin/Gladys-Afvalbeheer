@@ -10,10 +10,11 @@
   },
   "version": "1.0.0",
   "docker_image": "ghcr.io/gboulvin/gladys-afvalbeheer:1.0.0",
-  "gladys_version": ">=5.1.0",
+  "gladys_version": ">=5.2.0",
   "cover_image": "https://raw.githubusercontent.com/gboulvin/Gladys-Afvalbeheer/main/cover.png",
   "categories": ["services", "environment"],
   "transports": ["cloud"],
+  "location": true,
   "config_schema": [
     {
       "key": "intro",
@@ -25,10 +26,10 @@
         "es": "¿Dónde funciona?"
       },
       "description": {
-        "en": "Belgium: every municipality covered by the Recycle! app (Wallonia — Tibi, Ipalle, Intradel, BEP, Hygea, inBW, IDELUX, ICDI —, Flanders and Brussels), plus Limburg.net. Netherlands: about 60 waste companies and municipalities (Mijn Afvalwijzer, Ximmio, Burgerportaal, Opzet, HVC, ROVA, RD4, Circulus...). Pick your collector, then enter your address: the schedule is fetched from the collector's public API. No account needed.",
-        "fr": "Belgique : toutes les communes couvertes par l'application Recycle! (Wallonie — Tibi, Ipalle, Intradel, BEP, Hygea, inBW, IDELUX, ICDI —, Flandre et Bruxelles), plus Limburg.net. Pays-Bas : une soixantaine de collecteurs et communes (Mijn Afvalwijzer, Ximmio, Burgerportaal, Opzet, HVC, ROVA, RD4, Circulus...). Choisissez votre collecteur puis saisissez votre adresse : le calendrier est lu sur l'API publique du collecteur. Aucun compte nécessaire.",
-        "de": "Belgien: alle Gemeinden der Recycle!-App (Wallonien — Tibi, Ipalle, Intradel, BEP, Hygea, inBW, IDELUX, ICDI —, Flandern und Brüssel) sowie Limburg.net. Niederlande: rund 60 Entsorger und Gemeinden (Mijn Afvalwijzer, Ximmio, Burgerportaal, Opzet, HVC, ROVA, RD4, Circulus...). Wählen Sie Ihren Entsorger und geben Sie Ihre Adresse ein: Der Kalender wird über die öffentliche API des Entsorgers gelesen. Kein Konto nötig.",
-        "es": "Bélgica: todos los municipios de la aplicación Recycle! (Valonia — Tibi, Ipalle, Intradel, BEP, Hygea, inBW, IDELUX, ICDI —, Flandes y Bruselas), más Limburg.net. Países Bajos: unas 60 empresas y municipios (Mijn Afvalwijzer, Ximmio, Burgerportaal, Opzet, HVC, ROVA, RD4, Circulus...). Elija su recolector e introduzca su dirección: el calendario se lee en la API pública del recolector. No se necesita cuenta."
+        "en": "Belgium: every municipality covered by the Recycle! app (Wallonia — Tibi, Ipalle, Intradel, BEP, Hygea, inBW, IDELUX, ICDI —, Flanders and Brussels), plus Limburg.net. Netherlands: about 60 waste companies and municipalities (Mijn Afvalwijzer, Ximmio, Burgerportaal, Opzet, HVC, ROVA, RD4, Circulus...). Pick your collector and your Gladys house: its address is found from its location on the map (OpenStreetMap), and the schedule is read from the collector's public API. No account needed.",
+        "fr": "Belgique : toutes les communes couvertes par l'application Recycle! (Wallonie — Tibi, Ipalle, Intradel, BEP, Hygea, inBW, IDELUX, ICDI —, Flandre et Bruxelles), plus Limburg.net. Pays-Bas : une soixantaine de collecteurs et communes (Mijn Afvalwijzer, Ximmio, Burgerportaal, Opzet, HVC, ROVA, RD4, Circulus...). Choisissez votre collecteur et votre maison Gladys : son adresse est retrouvée d'après sa position sur la carte (OpenStreetMap), puis le calendrier est lu sur l'API publique du collecteur. Aucun compte nécessaire.",
+        "de": "Belgien: alle Gemeinden der Recycle!-App (Wallonien — Tibi, Ipalle, Intradel, BEP, Hygea, inBW, IDELUX, ICDI —, Flandern und Brüssel) sowie Limburg.net. Niederlande: rund 60 Entsorger und Gemeinden (Mijn Afvalwijzer, Ximmio, Burgerportaal, Opzet, HVC, ROVA, RD4, Circulus...). Wählen Sie Ihren Entsorger und Ihr Gladys-Haus: Seine Adresse wird aus seinem Standort auf der Karte ermittelt (OpenStreetMap), der Kalender über die öffentliche API des Entsorgers gelesen. Kein Konto nötig.",
+        "es": "Bélgica: todos los municipios de la aplicación Recycle! (Valonia — Tibi, Ipalle, Intradel, BEP, Hygea, inBW, IDELUX, ICDI —, Flandes y Bruselas), más Limburg.net. Países Bajos: unas 60 empresas y municipios (Mijn Afvalwijzer, Ximmio, Burgerportaal, Opzet, HVC, ROVA, RD4, Circulus...). Elija su recolector y su casa de Gladys: su dirección se obtiene de su ubicación en el mapa (OpenStreetMap) y el calendario se lee en la API pública del recolector. No se necesita cuenta."
       },
       "links": [
         {
@@ -621,6 +622,40 @@
       ]
     },
     {
+      "key": "house",
+      "type": "select",
+      "source": "houses",
+      "label": {
+        "en": "House",
+        "fr": "Maison",
+        "de": "Haus",
+        "es": "Casa"
+      },
+      "description": {
+        "en": "Its address is found from its location in the Gladys settings.",
+        "fr": "Son adresse est retrouvée d'après sa position dans les paramètres de Gladys.",
+        "de": "Die Adresse wird aus dem Standort in den Gladys-Einstellungen ermittelt.",
+        "es": "Su dirección se obtiene de su ubicación en los ajustes de Gladys."
+      },
+      "required": false
+    },
+    {
+      "key": "address_override",
+      "type": "section",
+      "label": {
+        "en": "Address (optional)",
+        "fr": "Adresse (facultatif)",
+        "de": "Adresse (optional)",
+        "es": "Dirección (opcional)"
+      },
+      "description": {
+        "en": "Leave these fields empty to use the address of the house. Fill in only what needs correcting (e.g. the house number if the house is pinned next door), or everything without picking a house.",
+        "fr": "Laissez ces champs vides pour utiliser l'adresse de la maison. Ne remplissez que ce qui doit être corrigé (ex. le numéro si la maison est placée chez le voisin), ou tout, sans choisir de maison.",
+        "de": "Lassen Sie diese Felder leer, um die Adresse des Hauses zu verwenden. Füllen Sie nur aus, was korrigiert werden muss (z. B. die Hausnummer), oder alles, ohne ein Haus zu wählen.",
+        "es": "Deje estos campos vacíos para usar la dirección de la casa. Rellene solo lo que haya que corregir (p. ej. el número), o todo, sin elegir casa."
+      }
+    },
+    {
       "key": "postcode",
       "type": "string",
       "label": {
@@ -635,7 +670,7 @@
         "de": "z. B. 6000 oder 1234AB",
         "es": "p. ej. 6000 o 1234AB"
       },
-      "required": true
+      "required": false
     },
     {
       "key": "house_number",
@@ -652,7 +687,7 @@
         "de": "z. B. 12",
         "es": "p. ej. 12"
       },
-      "required": true
+      "required": false
     },
     {
       "key": "house_number_suffix",

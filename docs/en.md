@@ -90,11 +90,16 @@ Your collector is not listed? Open an issue on the
 1. Open the **Configuration** tab of the integration.
 2. Pick your **waste collector**. In Belgium, it is **Recycle!** almost
    everywhere (**Limburg.net** in the province of Limburg).
-3. Enter your **postcode** and **house number** (and the **suffix**, e.g.
-   `A`, if any).
-4. For **Recycle!** and **Limburg.net**, also enter your **street name**,
-   written as in the Recycle! app (e.g. `Rue de la Montagne`). Limburg.net
-   also needs your **municipality**.
+3. Pick your **house**: its address is found from its location on the map
+   (Gladys settings → Houses), through OpenStreetMap. That is all most users
+   need.
+4. The **address** fields are optional: leave them empty to use the address
+   of the house, or fill in only what needs correcting — typically the
+   **house number** (and its **suffix**, e.g. `A`) when the house is pinned
+   next door, or the **street name** when it is not written as in the
+   Recycle! app (e.g. `Rue de la Montagne`). Without a house, fill in the
+   postcode and house number (plus the street name for Recycle! and
+   Limburg.net, and the municipality for Limburg.net).
 5. Choose the **language** of the device names and scene texts (English,
    French, German, Spanish or Dutch), and the **hours** of the evening and
    morning reminders (19:00 and 07:00 by default).
@@ -121,7 +126,7 @@ soft plastics; a fraction the integration does not know keeps its own name.
 
 ## Scenes
 
-**Triggers** (Gladys 5.1 or later, category **Integrations**):
+**Triggers** (Gladys 5.2 or later, category **Integrations**):
 
 - **Waste collection tomorrow** — fired at the evening reminder hour, once
   for every waste type collected the next day.

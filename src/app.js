@@ -3,6 +3,7 @@
 // so the tests drive it with the SDK's fake Gladys and a fake clock.
 //
 // One minute tick drives everything:
+//   0. resolve the address (from the chosen Gladys house, see src/address.js);
 //   1. fetch the schedule when due (first start, new address, every
 //      `refresh_interval_hours`; after a failure, retry in 15 minutes);
 //   2. publish the states that changed (the day count moves at midnight);
@@ -10,7 +11,8 @@
 // -----------------------------------------------------------------------------
 
 import { createLogger, DEVICE_TRANSPORTS } from '@gladysassistant/integration-sdk';
-import { configProblem, normalizeConfig } from './config.js';
+import { resolveConfig } from './address.js';
+import { normalizeConfig } from './config.js';
 import { formatDate } from './dates.js';
 import { buildDevices, buildStates } from './devices/wasteDevices.js';
 import { createSchedule } from './schedule.js';
@@ -48,6 +50,12 @@ const MESSAGES = {
 
 export function createApp(gladys, { store = createStore(), clock = () => new Date() } = {}) {
   let config = normalizeConfig();
+  // The configuration with the address resolved, null until it is (or while
+  // it cannot be: `problem` then says why). Every address-bound use (device
+  // ids, schedule) reads it, never `config`.
+  let effective = null;
+  let problem = null;
+  const geocodeCache = new Map();
   const schedule = createSchedule({ store, clock });
   let initialized = false;
   let retryAt = 0;
@@ -64,18 +72,26 @@ export function createApp(gladys, { store = createStore(), clock = () => new Dat
   }
 
   async function publishDevices() {
-    await gladys.publishDiscoveredDevices(buildDevices(gladys, config, schedule));
+    if (effective) {
+      await gladys.publishDiscoveredDevices(buildDevices(gladys, effective, schedule));
+    }
   }
 
   async function publishStates() {
-    const states = buildStates(gladys, config, schedule);
+    if (!effective) {
+      return;
+    }
+    const states = buildStates(gladys, effective, schedule);
     if (states.length > 0) {
       await gladys.publishChangedStates(states, { heartbeat: STATE_HEARTBEAT_MS });
     }
   }
 
   async function publishTransports(transport, message) {
-    const entries = buildDevices(gladys, config, schedule).map((device) => ({
+    if (!effective) {
+      return;
+    }
+    const entries = buildDevices(gladys, effective, schedule).map((device) => ({
       external_id: device.external_id,
       transport,
       ...(message ? { degraded: true, message } : {}),
@@ -92,20 +108,48 @@ export function createApp(gladys, { store = createStore(), clock = () => new Dat
     }
   }
 
+  /**
+   * Resolve the address once per configuration. Resolves the effective
+   * configuration, or null when it is unusable (status set). Throws when
+   * Gladys or the geocoder is unreachable.
+   */
+  async function resolve() {
+    if (effective || problem) {
+      return effective;
+    }
+    const resolved = await resolveConfig(gladys, config, geocodeCache);
+    ({ config: effective, problem } = resolved);
+    if (problem) {
+      await gladys.setConnectionStatus(false, problem);
+    }
+    return effective;
+  }
+
+  function failed(err) {
+    retryAt = clock().getTime() + RETRY_AFTER_FAILURE_MS;
+    logger.error(`Address or schedule fetch failed: ${err.message}`);
+    return gladys.setConnectionStatus(false, MESSAGES.unreachable(err)).catch(() => {});
+  }
+
   /** Fetch the schedule now and publish everything. Throws on failure. */
   async function refreshNow() {
     await init();
-    const problem = configProblem(config);
-    if (problem) {
-      await gladys.setConnectionStatus(false, problem);
+    // An explicit fetch retries a configuration problem: the house may have
+    // been placed on the map since (Gladys sends no event for it).
+    problem = null;
+    try {
+      await resolve();
+    } catch (err) {
+      await failed(err);
+      throw err;
+    }
+    if (!effective) {
       throw new Error(problem.en);
     }
     try {
-      await schedule.refresh(config);
+      await schedule.refresh(effective);
     } catch (err) {
-      retryAt = clock().getTime() + RETRY_AFTER_FAILURE_MS;
-      logger.error(`Schedule fetch failed: ${err.message}`);
-      await gladys.setConnectionStatus(false, MESSAGES.unreachable(err)).catch(() => {});
+      await failed(err);
       // The last known schedule is still served, flagged as stale.
       await publishTransports(DEVICE_TRANSPORTS.CLOUD, MESSAGES.unreachable(err)).catch(() => {});
       throw err;
@@ -121,10 +165,10 @@ export function createApp(gladys, { store = createStore(), clock = () => new Dat
 
   async function tickOnce() {
     await init();
-    if (configProblem(config)) {
+    if (!effective && (problem || clock().getTime() < retryAt)) {
       return;
     }
-    if (schedule.isRefreshDue(config) && clock().getTime() >= retryAt) {
+    if (!effective || (schedule.isRefreshDue(effective) && clock().getTime() >= retryAt)) {
       await refreshNow().catch(() => {});
     }
     const today = schedule.today();
@@ -134,7 +178,9 @@ export function createApp(gladys, { store = createStore(), clock = () => new Dat
       refreshWidgets();
     }
     await publishStates();
-    await fireDueReminders(gladys, { schedule, config });
+    if (effective) {
+      await fireDueReminders(gladys, { schedule, config: effective });
+    }
   }
 
   /** One tick; concurrent calls share the running one. */
@@ -162,11 +208,17 @@ export function createApp(gladys, { store = createStore(), clock = () => new Dat
     async onConnected() {
       await init();
       config = normalizeConfig(await gladys.getConfig());
-      const problem = configProblem(config);
+      // The house may have moved while disconnected: resolve again.
+      effective = null;
+      problem = null;
+      retryAt = 0;
+      try {
+        await resolve();
+      } catch (err) {
+        await failed(err);
+      }
       await publishDevices();
-      if (problem) {
-        await gladys.setConnectionStatus(false, problem);
-      } else if (!schedule.isRefreshDue(config)) {
+      if (effective && !schedule.isRefreshDue(effective)) {
         await gladys.setConnectionStatus(true);
         await publishTransports(DEVICE_TRANSPORTS.CLOUD);
       }
@@ -179,10 +231,16 @@ export function createApp(gladys, { store = createStore(), clock = () => new Dat
 
     async onConfigUpdated(newConfig) {
       config = normalizeConfig(newConfig);
+      effective = null;
+      problem = null;
       retryAt = 0;
-      const problem = configProblem(config);
-      if (problem) {
-        await gladys.setConnectionStatus(false, problem);
+      try {
+        await resolve();
+      } catch (err) {
+        await failed(err);
+        return;
+      }
+      if (!effective) {
         return;
       }
       // Language or address changed: names and ids follow.
@@ -203,7 +261,12 @@ export function createApp(gladys, { store = createStore(), clock = () => new Dat
 
     /** Scene action handlers, bound to the app context. */
     sceneAction(key, fields) {
-      return SCENE_ACTIONS[key](gladys, { fields, config, schedule, refreshNow });
+      return SCENE_ACTIONS[key](gladys, {
+        fields,
+        config: effective ?? config,
+        schedule,
+        refreshNow,
+      });
     },
 
     start() {

@@ -10,6 +10,8 @@ import { LANGUAGES } from './wasteTypes.js';
 
 export const DEFAULT_CONFIG = {
   collector: 'recycleapp',
+  // Selector of the Gladys house whose address is used (src/address.js).
+  house: '',
   postcode: '',
   house_number: '',
   house_number_suffix: '',
@@ -32,6 +34,12 @@ const clamp = (value, min, max, fallback) => {
 const text = (value) => (value === undefined || value === null ? '' : String(value).trim());
 
 /**
+ * Dutch postcodes are written '1234 AB' or '1234ab': keep the canonical
+ * '1234AB' every Dutch API accepts. A Belgian postcode is 4 digits.
+ */
+export const normalizePostcode = (value) => text(value).replace(/\s+/g, '').toUpperCase();
+
+/**
  * Merge the user config with the defaults.
  * @param {Record<string, unknown>} raw config returned by the SDK
  */
@@ -40,9 +48,8 @@ export function normalizeConfig(raw = {}) {
   return {
     ...DEFAULT_CONFIG,
     collector: text(raw.collector) || DEFAULT_CONFIG.collector,
-    // Dutch postcodes are written '1234 AB' or '1234ab': keep the canonical
-    // '1234AB' every Dutch API accepts. A Belgian postcode is 4 digits.
-    postcode: text(raw.postcode).replace(/\s+/g, '').toUpperCase(),
+    house: text(raw.house),
+    postcode: normalizePostcode(raw.postcode),
     house_number: text(raw.house_number),
     house_number_suffix: text(raw.house_number_suffix),
     street_name: text(raw.street_name),
@@ -81,28 +88,28 @@ const MESSAGES = {
     es: 'Recolector desconocido: elija uno en la configuración.',
   },
   postcode: {
-    en: 'Enter your postcode in the configuration.',
-    fr: 'Renseignez votre code postal dans la configuration.',
-    de: 'Geben Sie Ihre Postleitzahl in der Konfiguration ein.',
-    es: 'Introduzca su código postal en la configuración.',
+    en: 'Pick your house in the configuration, or enter your postcode.',
+    fr: 'Choisissez votre maison dans la configuration, ou renseignez votre code postal.',
+    de: 'Wählen Sie Ihr Haus in der Konfiguration oder geben Sie Ihre Postleitzahl ein.',
+    es: 'Elija su casa en la configuración o introduzca su código postal.',
   },
   house_number: {
-    en: 'Enter your house number in the configuration.',
-    fr: 'Renseignez votre numéro de maison dans la configuration.',
-    de: 'Geben Sie Ihre Hausnummer in der Konfiguration ein.',
-    es: 'Introduzca su número de casa en la configuración.',
+    en: 'No house number found: enter it in the configuration.',
+    fr: 'Aucun numéro trouvé : renseignez-le dans la configuration.',
+    de: 'Keine Hausnummer gefunden: Geben Sie sie in der Konfiguration ein.',
+    es: 'No se encontró el número: introdúzcalo en la configuración.',
   },
   [ADDRESS_FIELDS.STREET_NAME]: {
-    en: 'This collector needs your street name.',
-    fr: 'Ce collecteur a besoin du nom de votre rue.',
-    de: 'Dieser Entsorger benötigt Ihren Straßennamen.',
-    es: 'Este recolector necesita el nombre de su calle.',
+    en: 'This collector needs your street name: pick your house or enter it.',
+    fr: 'Ce collecteur a besoin du nom de votre rue : choisissez votre maison ou saisissez-le.',
+    de: 'Dieser Entsorger benötigt Ihren Straßennamen: Wählen Sie Ihr Haus oder geben Sie ihn ein.',
+    es: 'Este recolector necesita el nombre de su calle: elija su casa o introdúzcalo.',
   },
   [ADDRESS_FIELDS.CITY_NAME]: {
-    en: 'This collector needs your municipality.',
-    fr: 'Ce collecteur a besoin de votre commune.',
-    de: 'Dieser Entsorger benötigt Ihre Gemeinde.',
-    es: 'Este recolector necesita su municipio.',
+    en: 'This collector needs your municipality: pick your house or enter it.',
+    fr: 'Ce collecteur a besoin de votre commune : choisissez votre maison ou saisissez-la.',
+    de: 'Dieser Entsorger benötigt Ihre Gemeinde: Wählen Sie Ihr Haus oder geben Sie sie ein.',
+    es: 'Este recolector necesita su municipio: elija su casa o introdúzcalo.',
   },
 };
 

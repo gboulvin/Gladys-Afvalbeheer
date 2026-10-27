@@ -56,6 +56,12 @@ test('on connection, the schedule is fetched and one device per fraction publish
     ],
   );
 
+  // Gladys stores min/max as NOT NULL: a feature without them is a 422.
+  for (const feature of devices.flatMap((device) => device.features)) {
+    assert.equal(typeof feature.min, 'number', `${feature.external_id}: min`);
+    assert.equal(typeof feature.max, 'number', `${feature.external_id}: max`);
+  }
+
   assert.equal(gladys.fake.lastState(`${paper.external_id}:days`), 11);
   assert.equal(gladys.fake.lastState(`${paper.external_id}:next`), 'lundi 26 octobre');
   assert.equal(gladys.fake.connectionStatus.connected, true);
@@ -243,4 +249,161 @@ test('a new address forgets the old schedule', async (t) => {
     ),
   );
   assert.equal(gladys.fake.discoveredDevices[0].name, 'Collection – Organic waste');
+});
+
+const NOMINATIM_CHARLEROI = {
+  address: {
+    house_number: '1',
+    road: 'Rue de la Montagne',
+    city: 'Charleroi',
+    postcode: '6000',
+    country_code: 'be',
+  },
+};
+const HOUSE = { id: 'h1', name: 'Maison', selector: 'maison', latitude: 50.41, longitude: 4.44 };
+
+async function setupHouse(
+  t,
+  { config, houses = [HOUSE], geocode = NOMINATIM_CHARLEROI, extraRoutes = [] } = {},
+) {
+  const calls = mockFetch(t, [[/nominatim/, geocode], ...extraRoutes, ...recycleRoutes(SCHEDULE)]);
+  const gladys = createFakeGladys({ config, houses });
+  const app = createApp(gladys, {
+    store: createStore(await tempDataDir()),
+    clock: fakeClock('2026-10-15T08:00:00Z'),
+  });
+  await gladys.connect();
+  return { gladys, app, calls };
+}
+
+test('picking a house is enough: its address comes from its location', async (t) => {
+  const { gladys, app, calls } = await setupHouse(t, {
+    config: { collector: 'recycleapp', house: 'maison', language: 'fr' },
+  });
+  await app.onConnected();
+
+  const geocode = new URL(calls.find((call) => call.url.includes('nominatim')).url);
+  assert.equal(geocode.searchParams.get('lat'), '50.41');
+  assert.equal(geocode.searchParams.get('lon'), '4.44');
+  const streets = new URL(calls.find((call) => call.url.includes('/streets')).url);
+  assert.equal(streets.searchParams.get('q'), 'Rue de la Montagne');
+  assert.equal(gladys.fake.connectionStatus.connected, true);
+  assert.equal(gladys.fake.discoveredDevices.length, 4);
+  // Same ids as with the address typed in: nothing to re-create.
+  assert.ok(
+    gladys.fake.discoveredDevices.every((device) =>
+      device.external_id.includes('recycleapp-6000-1-'),
+    ),
+  );
+
+  // Geocoded once: a refresh does not ask OpenStreetMap again.
+  await app.refreshNow();
+  assert.equal(calls.filter((call) => call.url.includes('nominatim')).length, 1);
+});
+
+test('a typed address field overrides the geocoded one', async (t) => {
+  const { gladys, app } = await setupHouse(t, {
+    config: { collector: 'recycleapp', house: 'maison', house_number: '3', language: 'fr' },
+  });
+  await app.onConnected();
+  assert.ok(
+    gladys.fake.discoveredDevices.every((device) =>
+      device.external_id.includes('recycleapp-6000-3-'),
+    ),
+  );
+});
+
+test('a complete typed address does not read the house at all', async (t) => {
+  const { app, calls } = await setupHouse(t, {
+    config: { ...RECYCLE_CONFIG, house: 'maison' },
+  });
+  await app.onConnected();
+  assert.ok(!calls.some((call) => call.url.includes('nominatim')));
+});
+
+test('an unlocated, unknown or foreign house says what to do', async (t) => {
+  const cases = [
+    [{ houses: [{ ...HOUSE, latitude: null, longitude: null }] }, /no location/],
+    [{ houses: [] }, /no longer exists/],
+    [
+      { geocode: { address: { postcode: '75001', country_code: 'fr', house_number: '1' } } },
+      /neither in Belgium nor in the Netherlands/,
+    ],
+    [
+      { geocode: { address: { postcode: '6000', road: 'Rue X', country_code: 'be' } } },
+      /house number/,
+    ],
+  ];
+  for (const [options, message] of cases) {
+    const { gladys, app } = await setupHouse(t, {
+      ...options,
+      config: { collector: 'recycleapp', house: 'maison' },
+    });
+    await app.onConnected();
+    assert.equal(gladys.fake.connectionStatus.connected, false);
+    assert.match(gladys.fake.connectionStatus.message.en, message);
+    assert.equal(gladys.fake.discoveredDevices?.length ?? 0, 0);
+    t.mock.restoreAll();
+  }
+});
+
+test('the fetch button retries a house placed on the map since', async (t) => {
+  const houses = [{ ...HOUSE, latitude: null, longitude: null }];
+  const { gladys, app } = await setupHouse(t, {
+    houses,
+    config: { collector: 'recycleapp', house: 'maison', language: 'fr' },
+  });
+  await app.onConnected();
+  assert.match(gladys.fake.connectionStatus.message.en, /no location/);
+
+  gladys.fake.houses = [HOUSE];
+  const message = await app.fetchScheduleAction();
+  assert.match(message.fr, /^5 collectes trouvées/);
+  assert.equal(gladys.fake.connectionStatus.connected, true);
+});
+
+test('an unreachable geocoder is retried 15 minutes later', async (t) => {
+  let down = true;
+  mockFetch(t, [
+    [/nominatim/, () => (down ? new Response('busy', { status: 503 }) : NOMINATIM_CHARLEROI)],
+    ...recycleRoutes(SCHEDULE),
+  ]);
+  const clock = fakeClock('2026-10-15T08:00:00Z');
+  const gladys = createFakeGladys({
+    config: { collector: 'recycleapp', house: 'maison' },
+    houses: [HOUSE],
+  });
+  const app = createApp(gladys, { store: createStore(await tempDataDir()), clock });
+  await gladys.connect();
+  await app.onConnected();
+  assert.match(gladys.fake.connectionStatus.message.en, /could not be reached/);
+
+  down = false;
+  clock.advance(RETRY_AFTER_FAILURE_MS);
+  await app.tick();
+  assert.equal(gladys.fake.connectionStatus.connected, true);
+});
+
+test('when Nominatim refuses (rate limit), Photon gives the address', async (t) => {
+  const photon = {
+    features: [
+      {
+        properties: {
+          housenumber: '1',
+          street: 'Rue de la Montagne',
+          postcode: '6000',
+          city: 'Charleroi',
+          countrycode: 'BE',
+        },
+      },
+    ],
+  };
+  const { gladys, app } = await setupHouse(t, {
+    config: { collector: 'recycleapp', house: 'maison' },
+    geocode: new Response('slow down', { status: 429 }),
+    extraRoutes: [[/photon/, photon]],
+  });
+  await app.onConnected();
+  assert.equal(gladys.fake.connectionStatus.connected, true);
+  assert.equal(gladys.fake.discoveredDevices.length, 4);
 });

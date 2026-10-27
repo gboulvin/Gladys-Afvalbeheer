@@ -30,9 +30,12 @@ Gladys before reporting a problem.
 
 ## What the integration handles
 
-- **Your address** (postcode, house number, street, municipality) is stored in
-  the Gladys configuration and sent only to the waste collector you selected,
-  over HTTPS, to look up your schedule. It only shows up in the logs when a
+- **The location of the house** you pick (manifest `location: true`, shown
+  on the install screen) is sent once, over HTTPS, to OpenStreetMap
+  Nominatim (or Photon, its fallback) to find its postal address; it is kept in memory only.
+- **Your address** (found that way, or typed in the configuration) is sent
+  only to the waste collector you selected, over HTTPS, to look up your
+  schedule. It only shows up in the logs when a
   lookup fails ("street … not found in …"): remove it before sharing logs.
 - **No account, no password, no API key of yours** is ever asked. Some
   collectors use the public keys shipped in their own web or mobile apps; the

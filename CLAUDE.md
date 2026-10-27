@@ -49,6 +49,7 @@ src/scenes.js                scene triggers (reminders) and scene actions
 src/widgets.js               dashboard widgets (next collection, upcoming list)
 src/dates.js                 calendar dates in Europe/Brussels time
 src/store.js                 /data/state.json: last schedule, fired reminders, collector caches
+src/address.js               the address: chosen Gladys house -> reverse geocoding, typed fields override
 src/config.js                DEFAULT_CONFIG (mirrors the manifest defaults), normalization, checks
 gladys-assistant-integration.json  manifest
 docs/{en,fr,de,es}.md        user documentation, re-hosted by Gladys (en + fr mandatory)
@@ -83,7 +84,16 @@ test/                        node --test, SDK fake Gladys, mocked fetch (never t
   also offers Dutch.
 - **Manifest.** `transports` is `["cloud"]`: every collector is a public web
   API. The catalog `description` holds 10 to 100 characters per language, the
-  `name` at most 30. Scene triggers, scene actions and widgets require
-  `gladys_version >=5.1.0`.
+  `name` at most 30. The `house` select (`source: "houses"`) requires
+  `gladys_version >=5.2.0`, and reading its coordinates `location: true`.
+- **Address.** The address comes from the chosen house (reverse geocoding,
+  OpenStreetMap Nominatim, Photon as a fallback: one request per
+  configuration, cached), each typed
+  address field overriding the geocoded one. Code that depends on the address
+  (device ids, the schedule) uses the resolved configuration of `src/app.js`
+  (`effective`), never the raw one.
+- **Device features** always carry numeric `min` and `max`, a text one too:
+  Gladys stores them as NOT NULL columns and refuses the device with a 422
+  (the SDK's fake Gladys does not check it, `test/app.test.js` does).
 - **Style.** Prettier formats, ESLint catches mistakes. Comments explain why,
   in English. Tests never touch the network.

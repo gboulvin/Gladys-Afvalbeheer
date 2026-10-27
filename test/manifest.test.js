@@ -58,9 +58,14 @@ test('every text of the manifest exists in English, French, German and Spanish',
   }
 });
 
-test('the integration is declared cloud-only, for Gladys 5.1+', () => {
+test('the integration is cloud-only, reads the house location, needs Gladys 5.2+', () => {
   assert.deepEqual(manifest.transports, ['cloud']);
-  assert.match(manifest.gladys_version, /^>=5\.1\.0$/);
+  // `source: "houses"` needs 5.2.0; getHouses() needs `location: true`.
+  assert.match(manifest.gladys_version, /^>=5\.2\.0$/);
+  assert.equal(manifest.location, true);
+  const house = manifest.config_schema.find((f) => f.key === 'house');
+  assert.equal(house.source, 'houses');
+  assert.equal(house.options, undefined);
   assert.ok(manifest.name.length >= 3 && manifest.name.length <= 30);
   assert.ok(manifest.categories.length >= 1 && manifest.categories.length <= 3);
 });
