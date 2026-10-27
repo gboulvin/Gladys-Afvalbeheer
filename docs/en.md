@@ -126,7 +126,7 @@ soft plastics; a fraction the integration does not know keeps its own name.
 
 ## Scenes
 
-**Triggers** (Gladys 5.2 or later, category **Integrations**):
+**Triggers** (Gladys 5.3 or later, category **Integrations**):
 
 - **Waste collection tomorrow** — fired at the evening reminder hour, once
   for every waste type collected the next day.

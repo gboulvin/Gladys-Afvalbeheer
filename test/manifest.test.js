@@ -58,10 +58,11 @@ test('every text of the manifest exists in English, French, German and Spanish',
   }
 });
 
-test('the integration is cloud-only, reads the house location, needs Gladys 5.2+', () => {
+test('the integration is cloud-only, reads the house location, needs Gladys 5.3+', () => {
   assert.deepEqual(manifest.transports, ['cloud']);
-  // `source: "houses"` needs 5.2.0; getHouses() needs `location: true`.
-  assert.match(manifest.gladys_version, /^>=5\.2\.0$/);
+  // 5.3.0: catalog keywords and countries (5.2.0 already covers the
+  // `source: "houses"` select); getHouses() needs `location: true`.
+  assert.match(manifest.gladys_version, /^>=5\.3\.0$/);
   assert.equal(manifest.location, true);
   const house = manifest.config_schema.find((f) => f.key === 'house');
   assert.equal(house.source, 'houses');

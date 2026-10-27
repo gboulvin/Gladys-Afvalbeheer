@@ -127,7 +127,7 @@ eine unbekannte Fraktion behält ihren eigenen Namen.
 
 ## Szenen
 
-**Auslöser** (Gladys 5.2 oder neuer, Kategorie **Integrationen**):
+**Auslöser** (Gladys 5.3 oder neuer, Kategorie **Integrationen**):
 
 - **Müllabfuhr morgen** — zur Abenderinnerung ausgelöst, einmal pro am
   nächsten Tag abgeholter Abfallart.

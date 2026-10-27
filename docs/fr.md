@@ -131,7 +131,7 @@ nom.
 
 ## Scènes
 
-**Déclencheurs** (Gladys 5.2 ou plus récent, catégorie **Intégrations**) :
+**Déclencheurs** (Gladys 5.3 ou plus récent, catégorie **Intégrations**) :
 
 - **Collecte de déchets demain** — déclenché à l'heure du rappel du soir, une
   fois par type de déchet collecté le lendemain.

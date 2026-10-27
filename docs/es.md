@@ -126,7 +126,7 @@ plásticos blandos; una fracción desconocida conserva su propio nombre.
 
 ## Escenas
 
-**Disparadores** (Gladys 5.2 o posterior, categoría **Integraciones**):
+**Disparadores** (Gladys 5.3 o posterior, categoría **Integraciones**):
 
 - **Recogida de residuos mañana** — se activa a la hora del recordatorio de
   la tarde, una vez por cada tipo de residuo recogido al día siguiente.

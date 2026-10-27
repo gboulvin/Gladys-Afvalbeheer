@@ -85,7 +85,8 @@ test/                        node --test, SDK fake Gladys, mocked fetch (never t
 - **Manifest.** `transports` is `["cloud"]`: every collector is a public web
   API. The catalog `description` holds 10 to 100 characters per language, the
   `name` at most 30. The `house` select (`source: "houses"`) requires
-  `gladys_version >=5.2.0`, and reading its coordinates `location: true`.
+  `gladys_version >=5.2.0` (the catalog `keywords`/`countries` fields, 5.3.0),
+  and reading its coordinates `location: true`.
 - **Address.** The address comes from the chosen house (reverse geocoding,
   OpenStreetMap Nominatim, Photon as a fallback: one request per
   configuration, cached), each typed

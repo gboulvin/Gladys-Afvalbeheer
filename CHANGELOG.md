@@ -18,8 +18,8 @@ the notes of the version's GitHub Release.
 
 ### Changed
 
-- Gladys 5.2.0 or later is required (house selection), and the integration
-  asks for the house location on the install screen.
+- The integration asks for the house location on the install screen (to
+  find the address of the house you pick).
 
 ### Fixed
 
@@ -27,6 +27,27 @@ the notes of the version's GitHub Release.
   null": the "Next collection" text feature now declares its min and max.
 - Recycle!: a street written with other accents than in the app ("Rue
   Basslé" / "Rue Bassle") is now found.
+
+## [1.1.0] - 2026-10-26
+
+### Changed
+
+- Requires Gladys 5.3.0 or later: the manifest declares search keywords and
+  the countries where the integration works, for the new catalog of Gladys
+  5.3.
+- Integration SDK 0.16.
+
+## [1.0.2] - 2026-10-22
+
+### Security
+
+- `brace-expansion`, pulled in by ESLint, raised to 5.0.12 against the
+  high-severity denial-of-service advisories (GHSA-mh99-v99m-4gvg and
+  related). A development tool only: the published image never shipped it.
+- The image is rebuilt on the latest `node:24-alpine` (Node.js and Alpine
+  security patches); development tools and CI actions up to date.
+
+## [1.0.1] - 2026-10-15
 
 ## [1.0.0] - 2026-10-15
 
@@ -51,5 +72,8 @@ the notes of the version's GitHub Release.
 - English, French, German and Spanish everywhere (configuration, scenes,
   widgets, documentation); device names and scene texts also in Dutch.
 
-[Unreleased]: https://github.com/gboulvin/Gladys-Afvalbeheer/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/gboulvin/Gladys-Afvalbeheer/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/gboulvin/Gladys-Afvalbeheer/compare/v1.0.2...v1.1.0
+[1.0.2]: https://github.com/gboulvin/Gladys-Afvalbeheer/compare/v1.0.1...v1.0.2
+[1.0.1]: https://github.com/gboulvin/Gladys-Afvalbeheer/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/gboulvin/Gladys-Afvalbeheer/releases/tag/v1.0.0

@@ -15,7 +15,7 @@ and dashboard widgets.
 
 Pick your Gladys house: its address is found from its location (OpenStreetMap).
 Cloud only (public web APIs of the collectors), no account needed. Requires
-Gladys **5.2.0** or later. Available in English, French, German and Spanish.
+Gladys **5.3.0** or later. Available in English, French, German and Spanish.
 
 📖 User documentation: [English](docs/en.md) · [Français](docs/fr.md) ·
 [Deutsch](docs/de.md) · [Español](docs/es.md) — with the full list of
