@@ -10,6 +10,8 @@ the notes of the version's GitHub Release.
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-10-27
+
 ### Added
 
 - Pick your Gladys house in the configuration: its address is found from its
@@ -72,7 +74,8 @@ the notes of the version's GitHub Release.
 - English, French, German and Spanish everywhere (configuration, scenes,
   widgets, documentation); device names and scene texts also in Dutch.
 
-[Unreleased]: https://github.com/gboulvin/Gladys-Afvalbeheer/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/gboulvin/Gladys-Afvalbeheer/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/gboulvin/Gladys-Afvalbeheer/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/gboulvin/Gladys-Afvalbeheer/compare/v1.0.2...v1.1.0
 [1.0.2]: https://github.com/gboulvin/Gladys-Afvalbeheer/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/gboulvin/Gladys-Afvalbeheer/compare/v1.0.0...v1.0.1
